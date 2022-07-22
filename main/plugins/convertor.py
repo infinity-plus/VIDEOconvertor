@@ -28,26 +28,23 @@ from LOCAL.localisation import SUPPORT_LINK, JPG, JPG2
 async def mp3(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
-    if x:
-        out = ((msg.file.name).split("."))[0]
-    else:
-        out = dt.now().isoformat("_", "seconds")
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
+    out = (
+        ((msg.file.name).split("."))[0]
+        if x
+        else dt.now().isoformat("_", "seconds")
+    )
+
     try:
         DT = time.time()
         await fast_download(name, file, Drone, edit, DT, "**DOWNLOADING:**")
@@ -77,26 +74,23 @@ async def mp3(event, msg):
 async def flac(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
-    if x:
-        out = ((msg.file.name).split("."))[0]
-    else:
-        out = dt.now().isoformat("_", "seconds")
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
+    out = (
+        ((msg.file.name).split("."))[0]
+        if x
+        else dt.now().isoformat("_", "seconds")
+    )
+
     try:
         DT = time.time()
         await fast_download(name, file, Drone, edit, DT, "**DOWNLOADING:**")
@@ -122,32 +116,29 @@ async def flac(event, msg):
         return await edit.edit(f"An error occured while uploading!\n\nContact [SUPPORT]({SUPPORT_LINK})")
     await edit.delete()
     os.remove(name)
-    os.remove(f'{out}.mp3')                           
+    os.remove(f'{out}.mp3')
     os.remove(f'{out}.flac')                 
 
 async def wav(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
-    if x:
-        out = ((msg.file.name).split("."))[0]
-    else:
-        out = dt.now().isoformat("_", "seconds")
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
+    out = (
+        ((msg.file.name).split("."))[0]
+        if x
+        else dt.now().isoformat("_", "seconds")
+    )
+
     try:
         DT = time.time()
         await fast_download(name, file, Drone, edit, DT, "**DOWNLOADING:**")
@@ -173,32 +164,29 @@ async def wav(event, msg):
         return await edit.edit(f"An error occured while uploading!\n\nContact [SUPPORT]({SUPPORT_LINK})")
     await edit.delete()
     os.remove(name)
-    os.remove(f'{out}.mp3')                           
+    os.remove(f'{out}.mp3')
     os.remove(f'{out}.wav')                 
                                        
 async def mp4(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
-    if x:
-        out = ((msg.file.name).split("."))[0] 
-    else:
-        out = dt.now().isoformat("_", "seconds")
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
+    out = (
+        ((msg.file.name).split("."))[0]
+        if x
+        else dt.now().isoformat("_", "seconds")
+    )
+
     try:
         DT = time.time()
         await fast_download(name, file, Drone, edit, DT, "**DOWNLOADING:**")
@@ -218,28 +206,23 @@ async def mp4(event, msg):
     except Exception as e:
         print(e)
         return await edit.edit(f"An error occured while uploading!\n\nContact [SUPPORT]({SUPPORT_LINK})")
-    await edit.delete()                      
+    await edit.delete()
     os.remove(f'{out}.mp4')                 
                                            
 async def mkv(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
     if x:
         out = ((msg.file.name).split("."))[0] + ".mkv"
     else:
@@ -263,28 +246,23 @@ async def mkv(event, msg):
     except Exception as e:
         print(e)
         return await edit.edit(f"An error occured while uploading!\n\nContact [SUPPORT]({SUPPORT_LINK})")
-    await edit.delete()                        
+    await edit.delete()
     os.remove(f'{out}')
              
 async def webm(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
     if x:
         out = ((msg.file.name).split("."))[0] + ".webm"
     else:
@@ -308,28 +286,22 @@ async def webm(event, msg):
     except Exception as e:
         print(e)
         return await edit.edit(f"An error occured while uploading!\n\nContact [SUPPORT]({SUPPORT_LINK})")
-    await edit.delete()                 
+    await edit.delete()
     os.remove(f'{out}')
              
 async def file(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
-    x = msg.file.name
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     mime = msg.file.mime_type
-    if x:
+    if x := msg.file.name:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
     try:
         DT = time.time()
         await fast_download(name, file, Drone, edit, DT, "**DOWNLOADING:**")
@@ -349,22 +321,17 @@ async def file(event, msg):
 async def video(event, msg):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process!", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     x = msg.file.name
     mime = msg.file.mime_type
     if x:
         name = msg.file.name
-    elif 'mp4' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-    elif msg.video:
+    elif 'mp4' in mime or msg.video:
         name = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
     elif 'x-matroska' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
     elif 'webm' in mime:
-        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"      
+        name = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
     if x:
         out = ((msg.file.name).split("."))[0] + '.mp4'
     else:

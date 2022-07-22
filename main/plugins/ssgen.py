@@ -20,8 +20,7 @@ from ethon.telefunc import fast_download
 from ethon.pyfunc import video_metadata
 
 def hhmmss(seconds):
-    x = time.strftime('%H:%M:%S',time.gmtime(seconds))
-    return x
+    return time.strftime('%H:%M:%S',time.gmtime(seconds))
 
 async def ssgen(video, time_stamp):
     out = dt.now().isoformat("_", "seconds") + ".jpg"
@@ -53,17 +52,14 @@ async def screenshot(event, msg):
     Drone = event.client
     name = dt.now().isoformat("_", "seconds") + ".mp4"
     edit = await Drone.send_message(event.chat_id, "Trying to process.", reply_to=msg.id)
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     if msg.file.name:
         name = msg.file.name
     try:
         await fast_download(name, file, Drone, edit, time.time(), "**DOWNLOADING:**")
     except Exception as e:
         print(e)
-        return await edit.edit(f"An error occured while downloading.") 
+        return await edit.edit("An error occured while downloading.")
     pictures = []
     captions = []
     n = [8, 7, 6, 5, 4, 3, 2, 1.5, 1.25, 1.10]
@@ -74,7 +70,7 @@ async def screenshot(event, msg):
             pictures.append(sshot)
             captions.append(f'screenshot at {hhmmss(duration/n[i])}')
             await edit.edit(f"`{i+1}` screenshot generated.")
-    if len(pictures) > 0:
+    if pictures:
         await Drone.send_file(event.chat_id, pictures, caption=captions)
     else:
         await edit.edit("No screenshots could be generated!")

@@ -32,17 +32,14 @@ def mention(name, id):
 async def force_sub(id):
     FORCESUB = config("FORCESUB", default=None)
     if not str(FORCESUB).startswith("-100"):
-        FORCESUB = int("-100" + str(FORCESUB))
+        FORCESUB = int(f"-100{str(FORCESUB)}")
     ok = False
     try:
         x = await Drone(GetParticipantRequest(channel=int(FORCESUB), participant=int(id)))
         left = x.stringify()
-        if 'left' in left:
-            ok = True
-        else:
-            ok = False
+        ok = 'left' in left
     except UserNotParticipantError:
-        ok = True 
+        ok = True
     return ok
 
 #Thumbnail--------------------------------------------------------------------------------------------------------------
@@ -94,7 +91,7 @@ async def LOG_START(event, ps_name):
     LOG_ID = config("LOG_ID", default=None)
     chat = LOG_ID
     if not str(LOG_ID).startswith("-100"):
-        chat = int("-100" + str(LOG_ID))
+        chat = int(f"-100{str(LOG_ID)}")
     Tag = mention(event.sender.first_name, event.sender_id)
     text = f'{ps_name}\n\nUSER: {Tag}'
     xx = await event.client.send_message(int(chat), text, link_preview=False)
@@ -104,7 +101,7 @@ async def LOG_END(event, ps_name):
     LOG_ID = config("LOG_ID", default=None)
     chat = LOG_ID
     if not str(LOG_ID).startswith("-100"):
-        chat = int("-100" + str(LOG_ID))
+        chat = int(f"-100{str(LOG_ID)}")
     await event.client.send_message(int(chat), f'{ps_name}', link_preview=False)
 
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH_USERS, pattern="^/msg (.*)"))
@@ -127,19 +124,19 @@ def one_trial_queue(id, List1):
     
 #Not in use
 def two_trial_queue(id, List1, List2):
-    if not f'{id}' in List1:
+    if f'{id}' not in List1:
         List1.append(f'{id}')
+    elif f'{id}' in List2:
+        return False
+
     else:
-        if not f'{id}' in List2:
-            List2.append(f'{id}')
-        else:
-            return False
+        List2.append(f'{id}')
 
 #Not in use        
 def ps_queue(id, media, List1, List2):
     List1.append(f'{id}')
     List2.append(media)
-    if not len(List1) < 2:
+    if len(List1) >= 2:
         return 'EMPTY'
     if len(List1) > 2:
         return 'FULL'

@@ -38,8 +38,7 @@ forcesubtext = f"Hey there!To use this bot you've to join @{FORCESUB_UN}.\n\nAls
 async def compin(event):
     db = Database(MONGODB_URI, 'videoconvertor')
     if event.is_private:
-        media = event.media
-        if media:
+        if media := event.media:
             yy = await force_sub(event.sender_id)
             if yy is True:
                 return await event.reply(forcesubtext)
@@ -57,12 +56,8 @@ async def compin(event):
                                 [Button.inline("SSHOTS", data="sshots"),
                                  Button.inline("TRIM", data="trim")]
                             ])
-            elif 'png' in video:
+            elif 'png' in video or 'jpeg' in video or 'jpg' in video:
                 return
-            elif 'jpeg' in video:
-                return
-            elif 'jpg' in video:
-                return    
             else:
                 await event.reply('📦',
                             buttons=[  

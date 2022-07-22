@@ -33,23 +33,17 @@ async def encode(event, msg, scale=0):
     Drone = event.client
     edit = await Drone.send_message(event.chat_id, "Trying to process.", reply_to=msg.id)
     new_name = "out_" + dt.now().isoformat("_", "seconds")
-    if hasattr(msg.media, "document"):
-        file = msg.media.document
-    else:
-        file = msg.media
+    file = msg.media.document if hasattr(msg.media, "document") else msg.media
     mime = msg.file.mime_type
-    if 'mp4' in mime:
+    if 'mp4' in mime or msg.video:
         n = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-        out = new_name + ".mp4"
-    elif msg.video:
-        n = "media_" + dt.now().isoformat("_", "seconds") + ".mp4"
-        out = new_name + ".mp4"
+        out = f"{new_name}.mp4"
     elif 'x-matroska' in mime:
-        n = "media_" + dt.now().isoformat("_", "seconds") + ".mkv" 
-        out = new_name + ".mp4"            
+        n = "media_" + dt.now().isoformat("_", "seconds") + ".mkv"
+        out = f"{new_name}.mp4"
     elif 'webm' in mime:
-        n = "media_" + dt.now().isoformat("_", "seconds") + ".webm" 
-        out = new_name + ".mp4"
+        n = "media_" + dt.now().isoformat("_", "seconds") + ".webm"
+        out = f"{new_name}.mp4"
     else:
         n = msg.file.name
         ext = (n.split("."))[1]
@@ -64,7 +58,7 @@ async def encode(event, msg, scale=0):
         await log.delete()
         await LOG_END(event, log_end_text)
         print(e)
-        return await edit.edit(f"An error occured while downloading.\n\nContact [SUPPORT]({SUPPORT_LINK})", link_preview=False) 
+        return await edit.edit(f"An error occured while downloading.\n\nContact [SUPPORT]({SUPPORT_LINK})", link_preview=False)
     name = '__' + dt.now().isoformat("_", "seconds") + ".mp4"
     os.rename(n, name)
     await edit.edit("Extracting metadata...")
@@ -74,22 +68,18 @@ async def encode(event, msg, scale=0):
     if scale == hgt:
         os.rmdir("encodemedia")
         return await edit.edit(f"The video is already in {scale}p resolution.")
-    if scale == 240:
-        if 426 == wdt:
-            os.rmdir("encodemedia")
-            return await edit.edit(f"The video is already in {scale}p resolution.")
-    if scale == 360:
-        if 640 == wdt:
-            os.rmdir("encodemedia")
-            return await edit.edit(f"The video is already in {scale}p resolution.")
-    if scale == 480:
-        if 854 == wdt:
-            os.rmdir("encodemedia")
-            return await edit.edit(f"The video is already in {scale}p resolution.")
-    if scale == 720:
-        if 1280 == wdt:
-            os.rmdir("encodemedia")
-            return await edit.edit(f"The video is already in {scale}p resolution.")
+    if scale == 240 and wdt == 426:
+        os.rmdir("encodemedia")
+        return await edit.edit(f"The video is already in {scale}p resolution.")
+    if scale == 360 and wdt == 640:
+        os.rmdir("encodemedia")
+        return await edit.edit(f"The video is already in {scale}p resolution.")
+    if scale == 480 and wdt == 854:
+        os.rmdir("encodemedia")
+        return await edit.edit(f"The video is already in {scale}p resolution.")
+    if scale == 720 and wdt == 1280:
+        os.rmdir("encodemedia")
+        return await edit.edit(f"The video is already in {scale}p resolution.")
     FT = time.time()
     progress = f"progress-{FT}.txt"
     cmd = ''
@@ -108,29 +98,16 @@ async def encode(event, msg, scale=0):
         await LOG_END(event, log_end_text)
         os.rmdir("encodemedia")
         print(e)
-        return await edit.edit(f"An error occured while FFMPEG progress.\n\nContact [SUPPORT]({SUPPORT_LINK})", link_preview=False)  
-    out2 = dt.now().isoformat("_", "seconds") + ".mp4" 
-    if msg.file.name:
-        out2 = msg.file.name
-    else:
-        out2 = dt.now().isoformat("_", "seconds") + ".mp4" 
+        return await edit.edit(f"An error occured while FFMPEG progress.\n\nContact [SUPPORT]({SUPPORT_LINK})", link_preview=False)
+    out2 = dt.now().isoformat("_", "seconds") + ".mp4"
+    out2 = msg.file.name or dt.now().isoformat("_", "seconds") + ".mp4"
     os.rename(out, out2)
     i_size = os.path.getsize(name)
-    f_size = os.path.getsize(out2)     
+    f_size = os.path.getsize(out2)
     text = f'**{_ps}D by** : @{BOT_UN}'
     UT = time.time()
     await log.edit("Uploading file")
-    if 'x-matroska' in mime:
-        try:
-            uploader = await fast_upload(f'{out2}', f'{out2}', UT, Drone, edit, '**UPLOADING:**')
-            await Drone.send_file(event.chat_id, uploader, caption=text, thumb=JPG, force_document=True)
-        except Exception as e:
-            await log.delete()
-            await LOG_END(event, log_end_text)
-            os.rmdir("encodemedia")
-            print(e)
-            return await edit.edit(f"An error occured while uploading.\n\nContact [SUPPORT]({SUPPORT_LINK})", link_preview=False)
-    elif 'webm' in mime:
+    if 'x-matroska' in mime or 'webm' in mime:
         try:
             uploader = await fast_upload(f'{out2}', f'{out2}', UT, Drone, edit, '**UPLOADING:**')
             await Drone.send_file(event.chat_id, uploader, caption=text, thumb=JPG, force_document=True)

@@ -86,16 +86,14 @@ async def bban(event):
     if not c:
         await event.reply("Disallow who!?")
     AUTH = config("AUTH_USERS", default=None)
-    admins = []
-    admins.append(f'{int(AUTH)}')
+    admins = [f'{int(AUTH)}']
     if c in admins:
         return await event.reply("I cannot ban an AUTH_USER")
     xx = await db.is_banned(int(c))
     if xx is True:
         return await event.reply("User is already disallowed!")
-    else:
-        await db.banning(int(c))
-        await event.reply(f"{c} is now disallowed.")
+    await db.banning(int(c))
+    await event.reply(f"{c} is now disallowed.")
     admins.remove(f'{int(AUTH)}')
     
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH_USERS , pattern="^/allow (.*)" ))
